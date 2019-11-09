@@ -1,12 +1,11 @@
-#ifndef SYSTEM_ABSTRACTIONS_STRING_EXTENSIONS_HPP
-#define SYSTEM_ABSTRACTIONS_STRING_EXTENSIONS_HPP
+#pragma once
 
 /**
  * @file StringExtensions.hpp
  *
  * This module declares functions which extend the string library.
  *
- * Copyright © 2014-2018 by Richard Walters
+ * Copyright © 2014-2019 by Richard Walters
  */
 
 #include <set>
@@ -15,7 +14,7 @@
 #include <string>
 #include <vector>
 
-namespace SystemAbstractions {
+namespace StringExtensions {
 
     /**
      * This function is like the vsprintf funtion in the standard C
@@ -239,5 +238,3 @@ namespace SystemAbstractions {
     );
 
 }
-
-#endif /* SYSTEM_ABSTRACTIONS_STRING_EXTENSIONS_HPP */

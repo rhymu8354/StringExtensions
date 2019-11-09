@@ -1,20 +1,20 @@
 /**
  * @file StringExtensions.cpp
  *
- * This module contains the implementation of fucntions
+ * This module contains the implementation of functions
  * which extend the string library.
  *
- * Copyright © 2014-2018 by Richard Walters
+ * Copyright © 2014-2019 by Richard Walters
  */
 
 #include <limits>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <sstream>
-#include <SystemAbstractions/StringExtensions.hpp>
+#include <StringExtensions/StringExtensions.hpp>
 #include <vector>
 
-namespace SystemAbstractions {
+namespace StringExtensions {
 
     std::string vsprintf(const char* format, va_list args) {
         va_list argsCopy;

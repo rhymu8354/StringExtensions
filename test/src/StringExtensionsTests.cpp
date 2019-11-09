@@ -2,22 +2,22 @@
  * @file StringExtensionsTests.cpp
  *
  * This module contains the unit tests of the
- * SystemAbstractions functions which extend the string library.
+ * StringExtensions functions which extend the string library.
  *
- * © 2018 by Richard Walters
+ * © 2018-2019 by Richard Walters
  */
 
 #include <gtest/gtest.h>
 #include <inttypes.h>
 #include <limits>
 #include <stdint.h>
-#include <SystemAbstractions/StringExtensions.hpp>
+#include <StringExtensions/StringExtensions.hpp>
 #include <vector>
 
 std::string vsprintfHelper(char const* format, ...) {
     va_list args;
     va_start(args, format);
-    const auto result = SystemAbstractions::vsprintf("%s, %s!", args);
+    const auto result = StringExtensions::vsprintf("%s, %s!", args);
     va_end(args);
     return result;
 }
@@ -27,20 +27,20 @@ TEST(StringExtensionsTests, vsprintf) {
 }
 
 TEST(StringExtensionsTests, sprintfBehavesLikeTheStandardCLibrarysVersion) {
-    ASSERT_EQ("Hello, World!", SystemAbstractions::sprintf("%s, %s!", "Hello", "World"));
+    ASSERT_EQ("Hello, World!", StringExtensions::sprintf("%s, %s!", "Hello", "World"));
 }
 
 TEST(StringExtensionsTests, sprintfReturnsSomethingComparableToCppString) {
     const std::string expectedOutput = "The answer is 42.";
-    ASSERT_EQ(expectedOutput, SystemAbstractions::sprintf("The answer is %d.", 42));
+    ASSERT_EQ(expectedOutput, StringExtensions::sprintf("The answer is %d.", 42));
 }
 
 TEST(StringExtensionsTests, wcstombs) {
-    ASSERT_EQ("Hello, World!", SystemAbstractions::wcstombs(L"Hello, World!"));
+    ASSERT_EQ("Hello, World!", StringExtensions::wcstombs(L"Hello, World!"));
 }
 
 TEST(StringExtensionsTests, Trim) {
-    ASSERT_EQ("Hello, World!", SystemAbstractions::Trim("  \t  \t\t  Hello, World! \r  \n \r\n \t \t\t  "));
+    ASSERT_EQ("Hello, World!", StringExtensions::Trim("  \t  \t\t  Hello, World! \r  \n \r\n \t \t\t  "));
 }
 
 TEST(StringExtensionsTests, Indent) {
@@ -48,7 +48,7 @@ TEST(StringExtensionsTests, Indent) {
         "Hello, World!\r\n"
         "  This is line 2\r\n"
         "  This is line 3\r\n",
-        SystemAbstractions::Indent(
+        StringExtensions::Indent(
             "Hello, World!\r\n"
             "This is line 2\r\n"
             "This is line 3\r\n",
@@ -63,7 +63,7 @@ TEST(StringExtensionsTests, Indent) {
             "}"
         ),
         "Struct {"
-        + SystemAbstractions::Indent(
+        + StringExtensions::Indent(
             "\r\nfield 1"
             "\r\nfield 2",
             2
@@ -76,7 +76,7 @@ TEST(StringExtensionsTests, ParseComponent) {
     const std::string line = "Value = {abc {x} = def} NextValue = 42";
     ASSERT_EQ(
         "abc {x} = def}",
-        SystemAbstractions::ParseComponent(line, 9, line.length())
+        StringExtensions::ParseComponent(line, 9, line.length())
     );
 }
 
@@ -84,7 +84,7 @@ TEST(StringExtensionsTests, Escape) {
     const std::string line = "Hello, W^orld!";
     ASSERT_EQ(
         "Hello,^ W^^orld^!",
-        SystemAbstractions::Escape(line, '^', {' ', '!', '^'})
+        StringExtensions::Escape(line, '^', {' ', '!', '^'})
     );
 }
 
@@ -92,7 +92,7 @@ TEST(StringExtensionsTests, Unescape) {
     const std::string line = "Hello,^ W^^orld^!";
     ASSERT_EQ(
         "Hello, W^orld!",
-        SystemAbstractions::Unescape(line, '^')
+        StringExtensions::Unescape(line, '^')
     );
 }
 
@@ -100,7 +100,7 @@ TEST(StringExtensionsTests, Split) {
     const std::string line = "Hello, World!";
     ASSERT_EQ(
         (std::vector< std::string >{"Hello,", "World!"}),
-        SystemAbstractions::Split(line, ' ')
+        StringExtensions::Split(line, ' ')
     );
 }
 
@@ -108,31 +108,31 @@ TEST(StringExtensionsTests, Join) {
     const std::vector< std::string > pieces{"Hello", "World!"};
     ASSERT_EQ(
         "Hello, World!",
-        SystemAbstractions::Join(pieces, ", ")
+        StringExtensions::Join(pieces, ", ")
     );
 }
 
 TEST(StringExtensionsTests, ToLower) {
-    EXPECT_EQ("hello", SystemAbstractions::ToLower("Hello"));
-    EXPECT_EQ("hello", SystemAbstractions::ToLower("hello"));
-    EXPECT_EQ("hello", SystemAbstractions::ToLower("heLLo"));
-    EXPECT_EQ("example", SystemAbstractions::ToLower("eXAmplE"));
-    EXPECT_EQ("example", SystemAbstractions::ToLower("example"));
-    EXPECT_EQ("example", SystemAbstractions::ToLower("EXAMPLE"));
-    EXPECT_EQ("foo1bar", SystemAbstractions::ToLower("foo1BAR"));
-    EXPECT_EQ("foo1bar", SystemAbstractions::ToLower("fOo1bAr"));
-    EXPECT_EQ("foo1bar", SystemAbstractions::ToLower("foo1bar"));
-    EXPECT_EQ("foo1bar", SystemAbstractions::ToLower("FOO1BAR"));
+    EXPECT_EQ("hello", StringExtensions::ToLower("Hello"));
+    EXPECT_EQ("hello", StringExtensions::ToLower("hello"));
+    EXPECT_EQ("hello", StringExtensions::ToLower("heLLo"));
+    EXPECT_EQ("example", StringExtensions::ToLower("eXAmplE"));
+    EXPECT_EQ("example", StringExtensions::ToLower("example"));
+    EXPECT_EQ("example", StringExtensions::ToLower("EXAMPLE"));
+    EXPECT_EQ("foo1bar", StringExtensions::ToLower("foo1BAR"));
+    EXPECT_EQ("foo1bar", StringExtensions::ToLower("fOo1bAr"));
+    EXPECT_EQ("foo1bar", StringExtensions::ToLower("foo1bar"));
+    EXPECT_EQ("foo1bar", StringExtensions::ToLower("FOO1BAR"));
 }
 
 TEST(StringExtensionsTests, ToInteger) {
     struct TestVector {
         std::string input;
         intmax_t output;
-        SystemAbstractions::ToIntegerResult expectedResult;
+        StringExtensions::ToIntegerResult expectedResult;
     };
-    const auto maxAsString = SystemAbstractions::sprintf("%" PRIdMAX, std::numeric_limits< intmax_t >::max());
-    const auto minAsString = SystemAbstractions::sprintf("%" PRIdMAX, std::numeric_limits< intmax_t >::lowest());
+    const auto maxAsString = StringExtensions::sprintf("%" PRIdMAX, std::numeric_limits< intmax_t >::max());
+    const auto minAsString = StringExtensions::sprintf("%" PRIdMAX, std::numeric_limits< intmax_t >::lowest());
     auto maxPlusOneAsString = maxAsString;
     size_t digit = maxPlusOneAsString.length();
     while (digit > 0) {
@@ -162,40 +162,40 @@ TEST(StringExtensionsTests, ToInteger) {
         minMinusOneAsString.insert(maxPlusOneAsString.begin() + 1, '1');
     }
     const std::vector< TestVector > testVectors{
-        {"0", 0, SystemAbstractions::ToIntegerResult::Success},
-        {"42", 42, SystemAbstractions::ToIntegerResult::Success},
-        {"-42", -42, SystemAbstractions::ToIntegerResult::Success},
+        {"0", 0, StringExtensions::ToIntegerResult::Success},
+        {"42", 42, StringExtensions::ToIntegerResult::Success},
+        {"-42", -42, StringExtensions::ToIntegerResult::Success},
         {
             maxAsString,
             std::numeric_limits< intmax_t >::max(),
-            SystemAbstractions::ToIntegerResult::Success
+            StringExtensions::ToIntegerResult::Success
         },
         {
             minAsString,
             std::numeric_limits< intmax_t >::lowest(),
-            SystemAbstractions::ToIntegerResult::Success
+            StringExtensions::ToIntegerResult::Success
         },
         {
             maxPlusOneAsString,
             0,
-            SystemAbstractions::ToIntegerResult::Overflow
+            StringExtensions::ToIntegerResult::Overflow
         },
         {
             minMinusOneAsString,
             0,
-            SystemAbstractions::ToIntegerResult::Overflow
+            StringExtensions::ToIntegerResult::Overflow
         },
     };
     for (const auto& testVector: testVectors) {
         intmax_t output;
         EXPECT_EQ(
             testVector.expectedResult,
-            SystemAbstractions::ToInteger(
+            StringExtensions::ToInteger(
                 testVector.input,
                 output
             )
         );
-        if (testVector.expectedResult == SystemAbstractions::ToIntegerResult::Success) {
+        if (testVector.expectedResult == StringExtensions::ToIntegerResult::Success) {
             EXPECT_EQ(
                 output,
                 testVector.output
