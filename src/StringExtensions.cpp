@@ -179,6 +179,43 @@ namespace StringExtensions {
         return values;
     }
 
+    std::vector< std::string > Split(
+        const std::string& s,
+        const std::string& d
+    ) {
+        std::vector< std::string > values;
+        auto remainder = Trim(s);
+        const auto delimiterLength = d.length();
+        while (!remainder.empty()) {
+            auto delimiter = remainder.find(d);
+            if (delimiter == std::string::npos) {
+                values.push_back(remainder);
+                remainder.clear();
+            } else {
+                values.push_back(Trim(remainder.substr(0, delimiter)));
+                remainder = Trim(remainder.substr(delimiter + delimiterLength));
+            }
+        }
+        return values;
+    }
+
+    std::string Join(
+        const std::vector< std::string >& v,
+        char d
+    ) {
+        std::ostringstream builder;
+        bool first = true;
+        for (const auto& piece: v) {
+            if (first) {
+                first = false;
+            } else {
+                builder << d;
+            }
+            builder << piece;
+        }
+        return builder.str();
+    }
+
     std::string Join(
         const std::vector< std::string >& v,
         const std::string& d

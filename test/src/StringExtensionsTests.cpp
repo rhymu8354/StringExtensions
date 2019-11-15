@@ -96,7 +96,7 @@ TEST(StringExtensionsTests, Unescape) {
     );
 }
 
-TEST(StringExtensionsTests, Split) {
+TEST(StringExtensionsTests, Split_Single_Character_Delimiter) {
     const std::string line = "Hello, World!";
     ASSERT_EQ(
         (std::vector< std::string >{"Hello,", "World!"}),
@@ -104,7 +104,23 @@ TEST(StringExtensionsTests, Split) {
     );
 }
 
-TEST(StringExtensionsTests, Join) {
+TEST(StringExtensionsTests, Split_Multi_Character_Delimiter) {
+    const std::string line = "Hello::World!::This:Day";
+    ASSERT_EQ(
+        (std::vector< std::string >{"Hello", "World!", "This:Day"}),
+        StringExtensions::Split(line, "::")
+    );
+}
+
+TEST(StringExtensionsTests, Join_Single_Character_Delimiter) {
+    const std::vector< std::string > pieces{"Hello", "World!"};
+    ASSERT_EQ(
+        "Hello:World!",
+        StringExtensions::Join(pieces, ':')
+    );
+}
+
+TEST(StringExtensionsTests, Join_Multi_Character_Delimiter) {
     const std::vector< std::string > pieces{"Hello", "World!"};
     ASSERT_EQ(
         "Hello, World!",
