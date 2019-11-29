@@ -10,7 +10,9 @@
 #include <gtest/gtest.h>
 #include <inttypes.h>
 #include <limits>
+#include <map>
 #include <stdint.h>
+#include <string>
 #include <StringExtensions/StringExtensions.hpp>
 #include <vector>
 
@@ -218,4 +220,32 @@ TEST(StringExtensionsTests, ToInteger) {
             );
         }
     }
+}
+
+TEST(StringExtensionsTests, InstantiateTemplate) {
+    // Arrange
+    const std::string templateText = R"(
+Hello, ${who}!
+The $10,000 {which you owe ${who}}
+is due to \${someone}
+$\{when}.  ${something} This one ends ${early
+    )";
+    const std::map< std::string, std::string > variables{
+        {"who", "World"},
+        {"when", "tomorrow"},
+        {"what", "example"},
+    };
+
+    // Act
+    const auto instance = StringExtensions::InstantiateTemplate(templateText, variables);
+
+    // Assert
+    EXPECT_EQ(
+        R"(
+Hello, World!
+The $10,000 {which you owe World}
+is due to ${someone}
+$\{when}.   This one ends )",
+        instance
+    );
 }

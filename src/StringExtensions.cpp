@@ -316,4 +316,61 @@ namespace StringExtensions {
         }
     }
 
+    std::string InstantiateTemplate(
+        const std::string& templateText,
+        const std::map< std::string, std::string >& variables
+    ) {
+        std::ostringstream builder;
+        enum class State {
+            Normal,
+            Escape,
+            TokenStart,
+            Token,
+        } state = State::Normal;
+        std::string token;
+        for (auto c: templateText) {
+            switch (state) {
+                case State::Normal: {
+                    if (c == '\\') {
+                        state = State::Escape;
+                    } else if (c == '$') {
+                        state = State::TokenStart;
+                    } else {
+                        builder << c;
+                    }
+                } break;
+
+                case State::Escape: {
+                    state = State::Normal;
+                    builder << c;
+                } break;
+
+                case State::TokenStart: {
+                    if (c == '{') {
+                        state = State::Token;
+                        token.clear();
+                    } else {
+                        state = State::Normal;
+                        builder << '$' << c;
+                    }
+                } break;
+
+                case State::Token: {
+                    if (c == '}') {
+                        const auto variablesEntry = variables.find(token);
+                        if (variablesEntry != variables.end()) {
+                            builder << variablesEntry->second;
+                        }
+                        state = State::Normal;
+                    } else {
+                        token += c;
+                    }
+                } break;
+
+                default: break;
+            }
+        }
+        return builder.str();
+    }
+
 }
